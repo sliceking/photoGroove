@@ -1,39 +1,21 @@
 module PhotoGroove exposing (main)
 
-import Html exposing (div, h1, h3, img, text, button, input, label)
+import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Browser
-import Dict exposing (update)
 import Array exposing (Array)
+import Random
 
 urlPrefix : String
 urlPrefix = 
     "http://elm-in-action.com/"
 
-getPhotoUrl : Int -> String
-getPhotoUrl index =
-    case Array.get index photoArray of
-        Just photo ->
-            photo.url
-        Nothing ->
-            ""
-
 type Msg
     = ClickedPhoto String
     | ClickedSize ThumbnailSize
     | ClickedSupriseMe
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        ClickedPhoto url ->
-            { model | selectedUrl = url }
-        ClickedSupriseMe  ->
-            { model | selectedUrl = "2.jpeg" }
-        ClickedSize size ->
-            { model | chosenSize = size }
-
+    | GotSelectedIndex Int
 
 view : Model -> Html.Html Msg
 view model = 
@@ -54,6 +36,7 @@ view model =
             []
         ]
 
+viewThumbnail : String -> Photo -> Html.Html Msg
 viewThumbnail selectedUrl thumb = 
     img 
         [ src (urlPrefix ++ thumb.url)
@@ -108,10 +91,36 @@ photoArray : Array Photo
 photoArray = 
     Array.fromList initialModel.photos
 
+getPhotoUrl : Int -> String
+getPhotoUrl index =
+    case Array.get index photoArray of
+        Just photo ->
+            photo.url
+        Nothing ->
+            ""
+
+randomPhotoPicker : Random.Generator Int
+randomPhotoPicker = 
+    Random.int 0 (Array.length photoArray - 1)
+
+update : Msg -> Model -> (Model, Cmd Msg)
+update msg model =
+    case msg of
+        ClickedPhoto url ->
+            ( { model | selectedUrl = url }, Cmd.none )
+        ClickedSupriseMe  ->
+            ( model, Random.generate GotSelectedIndex randomPhotoPicker )
+        ClickedSize size ->
+            ( { model | chosenSize = size }, Cmd.none )
+        GotSelectedIndex index ->
+            ( { model | selectedUrl = getPhotoUrl index }, Cmd.none )
+
+main : Program () Model Msg
 main = 
-    Browser.sandbox
-        { init = initialModel
+    Browser.element
+        { init = \flags -> (initialModel, Cmd.none)
         , view = view
         , update = update
+        , subscriptions = \model -> Sub.none
         }
     

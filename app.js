@@ -5490,25 +5490,7 @@ var $author$project$PhotoGroove$randomPhotoPicker = A2(
 var $author$project$PhotoGroove$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
-			case 'ClickedPhoto':
-				var url = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{selectedUrl: url}),
-					$elm$core$Platform$Cmd$none);
-			case 'ClickedSupriseMe':
-				return _Utils_Tuple2(
-					model,
-					A2($elm$random$Random$generate, $author$project$PhotoGroove$GotSelectedIndex, $author$project$PhotoGroove$randomPhotoPicker));
-			case 'ClickedSize':
-				var size = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{chosenSize: size}),
-					$elm$core$Platform$Cmd$none);
-			default:
+			case 'GotSelectedIndex':
 				var index = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5517,9 +5499,27 @@ var $author$project$PhotoGroove$update = F2(
 							selectedUrl: $author$project$PhotoGroove$getPhotoUrl(index)
 						}),
 					$elm$core$Platform$Cmd$none);
+			case 'ClickedPhoto':
+				var url = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{selectedUrl: url}),
+					$elm$core$Platform$Cmd$none);
+			case 'ClickedSize':
+				var size = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{chosenSize: size}),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					model,
+					A2($elm$random$Random$generate, $author$project$PhotoGroove$GotSelectedIndex, $author$project$PhotoGroove$randomPhotoPicker));
 		}
 	});
-var $author$project$PhotoGroove$ClickedSupriseMe = {$: 'ClickedSupriseMe'};
+var $author$project$PhotoGroove$ClickedSurpriseMe = {$: 'ClickedSurpriseMe'};
 var $author$project$PhotoGroove$Large = {$: 'Large'};
 var $author$project$PhotoGroove$Small = {$: 'Small'};
 var $elm$html$Html$button = _VirtualDom_node('button');
@@ -5559,7 +5559,7 @@ var $author$project$PhotoGroove$sizeToString = function (size) {
 		case 'Small':
 			return 'small';
 		case 'Medium':
-			return 'medium';
+			return 'med';
 		default:
 			return 'large';
 	}
@@ -5573,9 +5573,6 @@ var $elm$html$Html$Attributes$src = function (url) {
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$PhotoGroove$urlPrefix = 'http://elm-in-action.com/';
-var $author$project$PhotoGroove$ClickedSize = function (a) {
-	return {$: 'ClickedSize', a: a};
-};
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$html$Html$Attributes$name = $elm$html$Html$Attributes$stringProperty('name');
@@ -5591,9 +5588,7 @@ var $author$project$PhotoGroove$viewSizeChooser = function (size) {
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$type_('radio'),
-						$elm$html$Html$Attributes$name('size'),
-						$elm$html$Html$Events$onClick(
-						$author$project$PhotoGroove$ClickedSize(size))
+						$elm$html$Html$Attributes$name('size')
 					]),
 				_List_Nil),
 				$elm$html$Html$text(
@@ -5662,17 +5657,17 @@ var $author$project$PhotoGroove$view = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text('photo groove')
+						$elm$html$Html$text('Photo Groove')
 					])),
 				A2(
 				$elm$html$Html$button,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$PhotoGroove$ClickedSupriseMe)
+						$elm$html$Html$Events$onClick($author$project$PhotoGroove$ClickedSurpriseMe)
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Suprise me!')
+						$elm$html$Html$text('Surprise Me!')
 					])),
 				A2(
 				$elm$html$Html$h3,
